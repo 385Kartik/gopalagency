@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 
+      Palette: Deep Navy + Warm Amber + Soft Cream
+      Sophisticated e-commerce palette inspired by premium retail brands
+    */
+    --background: 40 33% 98%;
+    --foreground: 222 47% 11%;
+
+    /* Brand: Deep Navy */
+    --primary: 222 47% 16%;
+    --primary-foreground: 40 33% 98%;
+    --primary-hover: 222 47% 22%;
+    
+    /* Accent: Warm Amber / Gold */
+    --secondary: 36 77% 49%;
+    --secondary-foreground: 222 47% 11%;
+    --secondary-hover: 36 77% 42%;
+
+    /* Accent Warm */
+    --accent: 36 77% 95%;
+    --accent-foreground: 222 47% 16%;
+
+    /* Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Neutrals */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    /* Status */
+    --success: 152 56% 39%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 36 77% 49%;
+    --warning-foreground: 222 47% 11%;
+    
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 222 47% 16%;
+
+    /* E-commerce */
+    --price: 152 56% 32%;
+    --price-foreground: 0 0% 100%;
+    --discount: 0 72% 51%;
+    --discount-foreground: 0 0% 100%;
+    
+    /* Premium Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 47% 22%) 50%, hsl(228 40% 28%) 100%);
+    --gradient-card: linear-gradient(160deg, hsl(0 0% 100%) 0%, hsl(40 33% 97%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(36 77% 49%) 0%, hsl(40 85% 58%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px 0 hsl(222 47% 11% / 0.04);
+    --shadow-md: 0 4px 14px -2px hsl(222 47% 11% / 0.08);
+    --shadow-lg: 0 12px 28px -6px hsl(222 47% 11% / 0.12);
+    --shadow-xl: 0 24px 48px -12px hsl(222 47% 11% / 0.16);
+    --shadow-gold: 0 8px 24px -4px hsl(36 77% 49% / 0.25);
+
+    --radius: 0.625rem;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 40 33% 96%;
+    --sidebar-primary: 36 77% 49%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 18%;
+    --sidebar-accent-foreground: 40 33% 96%;
+    --sidebar-border: 222 47% 20%;
+    --sidebar-ring: 36 77% 49%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 40 33% 96%;
+
+    --card: 222 47% 10%;
+    --card-foreground: 40 33% 96%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 40 33% 96%;
+
+    --primary: 36 77% 49%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 222 47% 18%;
+    --secondary-foreground: 40 33% 96%;
+
+    --muted: 222 30% 16%;
+    --muted-foreground: 220 14% 55%;
+
+    --accent: 222 30% 16%;
+    --accent-foreground: 40 33% 96%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 30% 18%;
+    --input: 222 30% 18%;
+    --ring: 36 77% 49%;
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 40 33% 96%;
+    --sidebar-primary: 36 77% 49%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 40 33% 96%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 36 77% 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    @apply font-bold text-foreground tracking-tight;
+  }
+}
+
+@layer components {
+  .product-card {
+    @apply bg-card rounded-xl border border-border overflow-hidden transition-all duration-500 ease-out;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .product-card:hover {
+    box-shadow: var(--shadow-lg);
+    @apply -translate-y-1.5 border-secondary/30;
+  }
+  
+  .price-tag {
+    @apply text-lg font-bold;
+    color: hsl(var(--price));
+  }
+  
+  .discount-tag {
+    @apply text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider;
+    background: hsl(var(--discount));
+    color: hsl(var(--discount-foreground));
+  }
+  
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 tracking-wide;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  
+  .btn-primary:hover {
+    background: hsl(var(--primary-hover));
+    box-shadow: var(--shadow-lg);
+    @apply -translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 tracking-wide;
+    background: var(--gradient-gold);
+    color: hsl(var(--secondary-foreground));
+  }
+  
+  .btn-secondary:hover {
+    background: hsl(var(--secondary-hover));
+    box-shadow: var(--shadow-gold);
+    @apply -translate-y-0.5;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-md border border-white/10;
+    background: hsl(0 0% 100% / 0.06);
+  }
+
+  .gold-accent {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
