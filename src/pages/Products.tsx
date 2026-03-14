@@ -101,7 +101,7 @@ const Products = () => {
       <Navbar />
       <div className="hero-gradient text-primary-foreground py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-display font-bold mb-3">All Products</h1>
+          <h1 className="text-4xl font-display gold-accent font-bold mb-3">All Products</h1>
           <p className="text-primary-foreground/70 text-lg">Browse our complete collection of premium stationery</p>
           <div className="mt-6 max-w-xl">
             <div className="relative">
