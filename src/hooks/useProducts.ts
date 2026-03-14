@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Product {
@@ -16,74 +16,97 @@ export interface Product {
   stock: number;
 }
 
-interface DbProduct {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  original_price: number | null;
-  image_url: string | null;
-  rating: number;
-  reviews: number;
-  in_stock: boolean;
-  category: string;
-  brand: string;
-  stock: number;
-  is_active: boolean;
-}
-
-const mapDbProduct = (p: DbProduct): Product => ({
-  id: p.id,
-  name: p.name,
-  description: p.description,
-  price: p.price,
-  originalPrice: p.original_price ?? undefined,
-  image: p.image_url || '/placeholder.svg',
-  rating: Number(p.rating),
-  reviews: p.reviews,
-  inStock: p.in_stock,
-  category: p.category,
-  brand: p.brand,
-  stock: p.stock,
-});
+export const categories = ['Notebooks', 'Pens', 'Pencils', 'Bags', 'Accessories', 'All'];
+export const brands = ['Classmate', 'Reynolds', 'Parker', 'Cello', 'All'];
 
 export const useProducts = () => {
-  return useQuery({
-    queryKey: ['products'],
-    queryFn: async (): Promise<Product[]> => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
+  const [data, setData] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-      if (error) throw error;
-      return (data as unknown as DbProduct[]).map(mapDbProduct);
-    },
-  });
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        const { data: productsData, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('is_active', true);
+
+        if (error) throw error;
+
+        if (productsData) {
+          const formattedProducts = productsData.map(p => ({
+            id: p.id,
+            name: p.name,
+            description: p.description,
+            price: p.price,
+            originalPrice: p.original_price,
+            image: p.image_url || 'https://via.placeholder.com/300',
+            rating: p.rating || 0,
+            reviews: p.reviews || 0,
+            inStock: p.in_stock ?? true,
+            category: p.category || 'Uncategorized',
+            brand: p.brand || 'Generic',
+            stock: p.stock || 0
+          }));
+          setData(formattedProducts);
+        }
+      } catch (err) {
+        console.error("Products fetch error:", err);
+        setData([]); // Taki UI crash na ho
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  return { data, isLoading };
 };
 
 export const useProduct = (id: number) => {
-  return useQuery({
-    queryKey: ['product', id],
-    queryFn: async (): Promise<Product | null> => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .single();
+  const [data, setData] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-      if (error) return null;
-      return mapDbProduct(data as unknown as DbProduct);
-    },
-    enabled: !!id,
-  });
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      try {
+        setIsLoading(true);
+        const { data: productData, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+
+        if (productData) {
+          setData({
+            id: productData.id,
+            name: productData.name,
+            description: productData.description,
+            price: productData.price,
+            originalPrice: productData.original_price,
+            image: productData.image_url || 'https://via.placeholder.com/300',
+            rating: productData.rating || 0,
+            reviews: productData.reviews || 0,
+            inStock: productData.in_stock ?? true,
+            category: productData.category || 'Uncategorized',
+            brand: productData.brand || 'Generic',
+            stock: productData.stock || 0
+          });
+        }
+      } catch (err) {
+        console.error('Product fetch error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  return { data, isLoading };
 };
-
-export const categories = [
-  "All", "Notebooks", "Pens", "Pencils", "Erasers", "Rulers", "Markers", "Files"
-];
-
-export const brands = [
-  "All", "ClassMate", "Reynolds", "Apsara", "Navneet", "Flair", "Pilot", "Parker", "Camlin"
-];
