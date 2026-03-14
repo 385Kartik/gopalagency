@@ -1,5 +1,3 @@
-// src/context/AuthContext.tsx
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -33,11 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+    const { data } = await supabase.from('profiles').select('*').eq('user_id', userId).single();
     setProfile(data as Profile | null);
   };
 
@@ -67,12 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, fullName: string) => {
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName },
-        emailRedirectTo: 'https://gopalagency.vercel.app/',
-      },
+      email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin }
     });
     return { error };
   };
@@ -83,18 +72,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
-    setProfile(null);
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      // Hard wipe all supabase keys
+      Object.keys(localStorage).forEach((key) => {
+        if (key.includes('supabase')) localStorage.removeItem(key);
+      });
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+    }
   };
 
   const updateProfile = async (data: Partial<Profile>) => {
     if (!user) return { error: 'Not authenticated' };
-    const { error } = await supabase
-      .from('profiles')
-      .update(data)
-      .eq('user_id', user.id);
+    const { error } = await supabase.from('profiles').update(data).eq('user_id', user.id);
     if (!error) await fetchProfile(user.id);
     return { error };
   };
