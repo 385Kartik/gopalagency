@@ -61,7 +61,12 @@ const ProductDetail = () => {
     );
   }
 
-  const images = [product.image, product.image, product.image];
+  // 🔴 FIXED: Dynamic Image Array 🔴
+  // Agar multiple images ka support future me aaye toh wo yahan handle ho jayega
+  const images = (product as any).images?.length > 0 
+    ? (product as any).images 
+    : [product.image].filter(Boolean);
+
   const reviews = getReviewsForProduct(product.id);
   const relatedProducts = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
   const discount = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
@@ -95,9 +100,11 @@ const ProductDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
           <div>
-            <div className="relative rounded-xl overflow-hidden bg-muted mb-4 aspect-square">
+            <div className="relative rounded-xl overflow-hidden bg-muted aspect-square">
               <img src={images[selectedImageIdx]} alt={product.name} className="w-full h-full object-cover" />
               {discount > 0 && <Badge className="absolute top-4 left-4 text-sm px-3 py-1 bg-destructive text-destructive-foreground">{discount}% OFF</Badge>}
+              
+              {/* Slider Arrows only show if images > 1 */}
               {images.length > 1 && (
                 <>
                   <Button variant="ghost" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 bg-card/80 hover:bg-card" onClick={() => setSelectedImageIdx(i => (i - 1 + images.length) % images.length)}><ChevronLeft className="h-5 w-5" /></Button>
@@ -105,13 +112,17 @@ const ProductDetail = () => {
                 </>
               )}
             </div>
-            <div className="flex gap-3">
-              {images.map((img, i) => (
-                <button key={i} onClick={() => setSelectedImageIdx(i)} className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${i === selectedImageIdx ? 'border-primary ring-2 ring-primary/30' : 'border-border'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
+            
+            {/* 🔴 FIXED: Thumbnails only show if images > 1 🔴 */}
+            {images.length > 1 && (
+              <div className="flex gap-3 mt-4">
+                {images.map((img: string, i: number) => (
+                  <button key={i} onClick={() => setSelectedImageIdx(i)} className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${i === selectedImageIdx ? 'border-primary ring-2 ring-primary/30' : 'border-border'}`}>
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
