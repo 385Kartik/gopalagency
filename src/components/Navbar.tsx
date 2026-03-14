@@ -130,7 +130,7 @@ const Navbar = () => {
                   </Link>
                   <div className="h-4 w-px bg-white/20 mx-1 hidden lg:block" />
                   <Link to="/login">
-                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 font-medium">Login</Button>
+                    <Button variant="ghost" size="sm" className="gold-accent hover:bg-white/10 font-medium">Login</Button>
                   </Link>
                   <Link to="/register">
                     <Button size="sm" className="font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" style={{ background: 'var(--gradient-gold)', color: 'hsl(var(--foreground))' }}>Sign Up</Button>
@@ -190,7 +190,7 @@ const Navbar = () => {
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2">
                     <Link to="/login" className="flex-1" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10 rounded-xl h-11">Login</Button>
+                      <Button variant="outline" className="w-full border-white/20 gold-accent hover:bg-white/10 rounded-xl h-11">Login</Button>
                     </Link>
                     <Link to="/register" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                       <Button className="w-full font-bold rounded-xl h-11" style={{ background: 'var(--gradient-gold)', color: 'hsl(var(--foreground))' }}>Sign Up</Button>
